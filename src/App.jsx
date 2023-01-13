@@ -33,6 +33,13 @@ function App() {
   };
   return (
     <div className="App">
+      <h1>Book Search</h1>
+      <h2> Infinity Scroll</h2>
+      <p>
+        Purely an exercise in pre-fetching using root margin
+        <br /> to make a request to API early so it gives the effect of minimal
+        loading for user
+      </p>
       <input type="text" onChange={handleSearch}></input>
       {books.map((book, index) => {
         if (books.length === index + 1) {
