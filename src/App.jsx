@@ -1,13 +1,18 @@
 import React, { useState, useRef, useCallback } from "react";
-
-import "./App.css";
 import UseBookSearch from "./UseBookSearch";
 
 function App() {
+  // State being passed into UseBookSearch custom hook //
+  // changed dependent on handleSearch (input typing) //
   const [query, setQuery] = useState(null);
   const [pageNumber, setPagenumber] = useState(1);
 
+  // Destructured variables of state from custom hook
   const { books, hasMore, isLoading, error } = UseBookSearch(query, pageNumber);
+
+  // Observer logic using hooks: (useRef, useCallback) to create a intersectionObserver //
+  // based on what is the last book that has been rendered on display
+  // pageNumber state is changed once isIntersectiong triggering a new set of books to be rendered in addition
   const observer = useRef();
   const lastBookElementRef = useCallback(
     (node) => {
@@ -31,6 +36,20 @@ function App() {
     setQuery(e.target.value);
     setPagenumber(1);
   };
+
+  // booksRender applying ref to last item based on
+  const booksRender = books.map((book, index) => {
+    if (books.length - 1 === index) {
+      return (
+        <div ref={lastBookElementRef} key={book}>
+          {book}
+        </div>
+      );
+    } else {
+      return <div key={book}>{book}</div>;
+    }
+  });
+
   return (
     <div className="App">
       <h1>Book Search</h1>
@@ -41,17 +60,7 @@ function App() {
         loading for user
       </p>
       <input type="text" onChange={handleSearch}></input>
-      {books.map((book, index) => {
-        if (books.length === index + 1) {
-          return (
-            <div ref={lastBookElementRef} key={book}>
-              {book}
-            </div>
-          );
-        } else {
-          return <div key={book}>{book}</div>;
-        }
-      })}
+      {booksRender}
       <div>{isLoading && "Loading..."}</div>
       <div>{error && "Error..."}</div>
       <div></div>

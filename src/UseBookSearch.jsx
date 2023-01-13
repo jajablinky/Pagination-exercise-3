@@ -26,7 +26,10 @@ const UseBookSearch = (query, pageNumber) => {
       .then((res) => {
         setBooks((prevBooks) => {
           return [
-            ...new Set(prevBooks.concat(res.data.docs.map((b) => b.title))),
+            ...new Set(
+              ...prevBooks,
+              res.data.docs.map((b) => b.title)
+            ),
           ];
         });
         setHasMore(res.data.docs.length);
