@@ -26,15 +26,11 @@ const UseBookSearch = (query, pageNumber) => {
       .then((res) => {
         setBooks((prevBooks) => {
           return [
-            ...new Set(
-              ...prevBooks,
-              res.data.docs.map((b) => b.title)
-            ),
+            ...new Set(prevBooks.concat(res.data.docs.map((b) => b.title))),
           ];
         });
         setHasMore(res.data.docs.length);
         setIsLoading(false);
-        console.log(books);
       })
       .catch((e) => {
         if (axios.isCancel(e)) {
